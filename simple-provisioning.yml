@@ -1,7 +1,7 @@
 ---
 - name: simple-provisioning
   hosts: localhost
-  connection: localhost
+  connection: local
   gather_facts: false
   vars:
     aws_region: ap-northeast-2
@@ -22,3 +22,13 @@
         Name: "{{ vpc_name }}"
       tenancy: default
     register: result_vpc
+    
+  - name: Create subnet
+    ec2_vpc_subnet:
+      state: present
+      region: "{{ aws_region }}"
+      vpc_id: "{{ result_vpc.vpc.id }}"
+      cidr: "{{ subnet_cidr_block }}"
+      tags:
+        Name: Webserver Sunbet
+    register: result_subnet   
